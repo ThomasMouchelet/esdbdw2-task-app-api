@@ -21,7 +21,14 @@
 
 3. Configurez les variables d'environnement (voir [Configuration](#configuration)).
 
-4. Démarrez l'application :
+4. Lancer les containers Docker :
+
+   ```bash
+   docker-compose up -d
+   ou docker compose up -d
+   ```
+
+5. Démarrez l'application :
 
    ```bash
    npm run start:dev
