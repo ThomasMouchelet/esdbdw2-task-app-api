@@ -7,13 +7,18 @@ import {
   Param,
   Delete,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { User } from 'src/decorators/user.decorator';
+import { UserEntity } from 'src/user/entities/user.entity';
 
+@ApiBearerAuth()
+@UseGuards(AuthGuard)
 @Controller('tasks')
 export class TaskController {
   constructor(private readonly taskService: TaskService) {}
@@ -21,9 +26,9 @@ export class TaskController {
   @ApiBody({
     type: CreateTaskDto,
   })
-  @UseGuards(AuthGuard)
   @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
+  create(@Body() createTaskDto: CreateTaskDto, @User() user: UserEntity) {
+    console.log('decorator user : ', user);
     return this.taskService.create(createTaskDto);
   }
 
