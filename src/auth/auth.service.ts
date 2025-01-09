@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SignupDto } from './dto/signup.dto';
 import { SigninDto } from './dto/signin.dto';
 import { UserService } from 'src/user/user.service';
@@ -8,7 +8,18 @@ import * as bcrypt from 'bcrypt';
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
-  signin(signinDto: SigninDto) {
+  async signin(signinDto: SigninDto) {
+    const user = await this.userService.findOneByEmail(signinDto.email);
+
+    const isPasswordCorrect = await bcrypt.compare(
+      signinDto.password,
+      user.password,
+    );
+
+    if (!isPasswordCorrect) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
     return "I'm signed in";
   }
 
