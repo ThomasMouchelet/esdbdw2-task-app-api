@@ -12,8 +12,12 @@ export class UserService {
     private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  create(createUserDto: CreateUserDto): Promise<UserEntity> {
-    return this.userRepository.save(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<UserEntity> {
+    const user = await this.userRepository.save(createUserDto);
+
+    delete user.password;
+
+    return user;
   }
 
   findAll(): Promise<UserEntity[]> {
